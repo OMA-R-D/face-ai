@@ -1,5 +1,9 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-python:3.8-slim-bullseye}
+#FROM ${BASE_IMAGE:-python:3.8-slim-bullseye}
+FROM debian:bullseye
+
+# Set the Debian mirror
+RUN sed -i 's/http:\/\/deb.debian.org\/debian\//http:\/\/mirror.example.com\/debian\//' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
@@ -8,6 +12,8 @@ RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         liblcms2-dev libcharls-dev libjxr-dev liblz4-dev libcfitsio-dev libpcre3 libpcre3-dev \
 	libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y python3 python3-setuptools pip
 
 # Dependencies for imagecodecs
 WORKDIR /tmp
@@ -35,6 +41,8 @@ RUN git clone --depth=1 -b 0.5.5 https://github.com/LLNL/zfp && \
 	make -j$(nproc) install && \
 	rm -rf /tmp/zfp
 # End imagecodecs dependencies
+
+#RUN pip install tensorflow==2.5.0 --no-cache-dir --force-reinstall --no-deps --ignore-installed
 
 # install common python packages
 SHELL ["/bin/bash", "-c"]
@@ -66,7 +74,7 @@ ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION
     EXTRA_PLUGINS=$EXTRA_PLUGINS
 COPY src src
 COPY srcext srcext
-RUN python -m src.services.facescan.plugins.setup
+RUN python3 -m src.services.facescan.plugins.setup
 
 # copy rest of the code
 COPY tools tools

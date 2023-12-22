@@ -1,4 +1,4 @@
-absl-py==1.0.0
+absl-py==0.14.1
 astunparse==1.6.3
 attrs==20.2.0
 beautifulsoup4==4.12.2
@@ -62,10 +62,10 @@ setuptools==57.5.0
 six==1.15.0
 snowballstemmer==2.2.0
 soupsieve==2.4.1
-tensorboard==2.11
+tensorboard==2.5
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.11.0
-tensorflow-estimator==2.11.0
+tensorflow==2.5.0
+tensorflow-estimator==2.5.0
 termcolor==1.1.0
 tf-slim==1.1.0
 threadpoolctl==3.2.0
@@ -88,7 +88,7 @@ pylama==8.4.1
 # dependencies for both scanner backends
 Pillow==8.3.2
 imagecodecs==2020.5.30
-numpy==1.20
+numpy==1.19.5
 scipy==1.5.4
 opencv-python==4.4.0.46
 scikit-image==0.17.2
