@@ -36,7 +36,7 @@ spring:
       max-request-size: ${MAX_REQUEST_SIZE:10MB}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://face-ai-postgres-db:5432/frs}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     continue-on-error: true
@@ -139,4 +139,4 @@ statistic:
 environment:
   servers:
     PYTHON:
-      url: ${PYTHON_URL:http://compreface-core:3000}
+      url: ${PYTHON_URL:http://face-ai-core:3000}

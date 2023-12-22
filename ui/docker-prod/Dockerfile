@@ -2,7 +2,7 @@ FROM node:12.7 AS build
 WORKDIR /usr/src/app
 LABEL intermidiate_frs=true
 COPY . .
-RUN npm install
+RUN npm install --ignore-scripts
 RUN npm run build:prod
 ### STAGE 2: Run ###
 FROM nginx:1.21.1

@@ -1,13 +1,13 @@
 upstream frsadmin {
-   server compreface-admin:8080 fail_timeout=10s max_fails=5;
+   server face-ai-admin:8080 fail_timeout=10s max_fails=5;
 }
 
 upstream frsapi {
-   server compreface-api:8080 fail_timeout=10s max_fails=5;
+   server face-ai-api:8080 fail_timeout=10s max_fails=5;
 }
 
 upstream frscore {
-   server compreface-core:3000 fail_timeout=10s max_fails=5;
+   server face-ai-core:3000 fail_timeout=10s max_fails=5;
 }
 
 server {
