@@ -34,8 +34,8 @@ import { EditUserInfoDialogModule } from '../edit-user-info-dialog/edit-user-inf
   declarations: [
     ToolBarContainerComponent, 
     ToolBarComponent, 
-    ChangePasswordDialogComponent, 
-    EditUserInfoDialogComponent
+    //ChangePasswordDialogComponent, 
+    //EditUserInfoDialogComponent
   ],
   exports: [ToolBarContainerComponent, ToolBarComponent],
   imports: [

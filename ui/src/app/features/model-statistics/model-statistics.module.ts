@@ -16,13 +16,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { ModelStatisticsComponent } from './model-statistics.component';
 import { ModelStatsService } from './model-statistics.service';
 
 @NgModule({
   declarations: [ModelStatisticsComponent],
-  imports: [CommonModule, TranslateModule, ChartsModule],
+  imports: [CommonModule, TranslateModule, NgChartsModule],
   exports: [ModelStatisticsComponent],
   providers: [ModelStatsService],
 })

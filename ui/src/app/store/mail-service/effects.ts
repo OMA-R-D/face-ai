@@ -32,8 +32,8 @@ export class MailServiceEffects {
     ofType(getMailServiceStatus),
     switchMap(() =>
       this.mailService.getStatus().pipe(
-        map((status: MailServiceStatus) => getMailServiceStatusSuccess({ status })),
-        catchError(error => of(getMailServiceStatusFail({ error })))
+        map((status: MailServiceStatus) => getMailServiceStatusSuccess(status)),
+        catchError(error => of(getMailServiceStatusFail(error)))
       )
     )
   ));

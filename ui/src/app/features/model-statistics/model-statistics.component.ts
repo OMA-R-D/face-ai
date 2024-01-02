@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 import { Component, Input, OnChanges } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, Color } from 'ng2-charts';
+import { ChartDataSets, ChartOptions, Label, Color } from 'chart.js';
+//import { Label, Color } from 'ng2-charts';
 import { Statistics } from 'src/app/data/interfaces/statistics';
 import { ModelStatsService } from './model-statistics.service';
 

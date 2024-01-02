@@ -30,7 +30,7 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
 @NgModule({
   declarations: [
     BreadcrumbsComponent,
-    InviteDialogComponent
+    //InviteDialogComponent
   ],
   exports: [BreadcrumbsComponent],
   imports: [
@@ -41,7 +41,7 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
     MatTooltipModule,
     TranslateModule,
     MatIconModule,
-    InviteDialogModule,
+    //InviteDialogModule,
   ],
   providers: [BreadcrumbsFacade],
   // entryComponents: [InviteDialogComponent],

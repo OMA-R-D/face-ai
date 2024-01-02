@@ -17,7 +17,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { switchMap, filter, tap, catchError, withLatestFrom } from 'rxjs/operators';
+import { switchMap, filter, tap, catchError, withLatestFrom, map } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
 import { Statistics } from 'src/app/data/interfaces/statistics';
 import { selectCurrentAppId } from '../application/selectors';
@@ -34,8 +34,8 @@ export class ModelStatisticsEffect {
     switchMap(data =>
       this.modelService.getStatistics(data.appId, data.modelId).pipe(
         filter(statistics => !!statistics),
-        map((statistics: Statistics) => loadModelStatisticsSuccess({ statistics })),
-        catchError(error => of(loadModelStatisticsFail({ error })))
+        map((statistics: Statistics) => loadModelStatisticsSuccess(statistics)),
+        catchError(error => of(loadModelStatisticsFail(error)))
       )
     )
   ));
