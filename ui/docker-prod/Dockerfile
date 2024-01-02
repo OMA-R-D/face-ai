@@ -1,7 +1,6 @@
-FROM node:17 AS build
+FROM node:18.6 AS build
 WORKDIR /usr/src/app
 LABEL intermidiate_frs=true
-COPY . .
 COPY . .
 RUN npm install --ignore-scripts --legacy-peer-deps
 RUN npm run build:prod
