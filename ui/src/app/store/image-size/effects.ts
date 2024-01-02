@@ -12,8 +12,8 @@ import { getMaxImageSize, getMaxImageSizeFail, getMaxImageSizeSuccess } from './
 export class MaxImageSizeEffect {
   constructor(private maxSizeService: ImageSizeService, private actions: Actions, private store: Store<any>) {}
 
-  @Effect({ dispatch: false })
-  getMaxSize$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  getMaxSize$ = createEffect(() =>this.actions.pipe(
     ofType(getMaxImageSize),
     switchMap(() =>
       this.maxSizeService.fetchMaxSize().pipe(
@@ -22,5 +22,5 @@ export class MaxImageSizeEffect {
         catchError(error => of(getMaxImageSizeFail(error)))
       )
     )
-  );
+  ));
 }

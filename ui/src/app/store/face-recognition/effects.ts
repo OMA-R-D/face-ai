@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { defer, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -36,8 +36,8 @@ export class FaceRecognitionEffects {
     private snackBarService: SnackBarService
   ) {}
 
-  @Effect()
-  recognizeFace$ = this.actions.pipe(
+  recognizeFace$ = createEffect(() =>
+   this.actions.pipe(
     ofType(recognizeFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectLandmarksPlugin)),
     switchMap(([action, model, demoApiKey, plugin]) =>
@@ -45,10 +45,10 @@ export class FaceRecognitionEffects {
         !!model ? this.getEndpoint(action.file, model, plugin.landmarks) : this.recognizeFace(action.file, demoApiKey, plugin.landmarks)
       )
     )
-  );
+  ));
 
-  @Effect()
-  addFace$ = this.actions.pipe(
+  ////@createEffect()
+  addFace$ = createEffect(() =>this.actions.pipe(
     ofType(addFace),
     switchMap(action =>
       this.recognitionService.addFace(action.file, action.model).pipe(
@@ -56,16 +56,16 @@ export class FaceRecognitionEffects {
         catchError(error => of(addFaceFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  ////@createEffect({ dispatch: false })
+  showError$ = createEffect(()=>this.actions.pipe(
     ofType(recognizeFaceFail, addFaceFail),
     tap(action => this.snackBarService.openHttpError(action.error))
-  );
+  ));
 
   /**
-   * Method made to finish recognize face effect, and for better understanding (more readable code).
+   * Method made to finish recognize face createEffect, and for better understanding (more readable code).
    *
    * @param file Image
    * @param apiKey model api key

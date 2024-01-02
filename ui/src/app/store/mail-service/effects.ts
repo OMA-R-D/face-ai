@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, switchMap, map } from 'rxjs/operators';
@@ -27,8 +27,8 @@ import { getMailServiceStatus, getMailServiceStatusFail, getMailServiceStatusSuc
 export class MailServiceEffects {
   constructor(private mailService: MailService, private actions: Actions, private store: Store<any>) {}
 
-  @Effect({ dispatch: false })
-  getMailServiceStatus$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  getMailServiceStatus$ = createEffect(() =>this.actions.pipe(
     ofType(getMailServiceStatus),
     switchMap(() =>
       this.mailService.getStatus().pipe(
@@ -36,5 +36,5 @@ export class MailServiceEffects {
         catchError(error => of(getMailServiceStatusFail(error)))
       )
     )
-  );
+  ));
 }

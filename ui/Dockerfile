@@ -1,9 +1,8 @@
-FROM node:17 AS build
+FROM node:12.7 AS build
 WORKDIR /usr/src/app
 LABEL intermidiate_frs=true
 COPY . .
-COPY . .
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 RUN npm run build:prod
 ### STAGE 2: Run ###
 FROM nginx:1.21.1

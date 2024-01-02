@@ -15,7 +15,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -49,8 +49,8 @@ export class ApplicationListEffect {
     private store: Store<any>
   ) { }
 
-  @Effect()
-  loadApplications$ = this.actions.pipe(
+  //@createEffect()
+  loadApplications$ = createEffect(() =>this.actions.pipe(
     ofType(loadApplications),
     switchMap(() =>
       this.applicationService.getAll().pipe(
@@ -58,10 +58,10 @@ export class ApplicationListEffect {
         catchError(error => of(loadApplicationsFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  createApplication$ = this.actions.pipe(
+  //@createEffect()
+  createApplication$ = createEffect(() =>this.actions.pipe(
     ofType(createApplication),
     switchMap(({ name }) =>
       this.applicationService.create(name).pipe(
@@ -69,19 +69,19 @@ export class ApplicationListEffect {
         catchError(error => of(createApplicationFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  createApplicationSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  createApplicationSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(createApplicationSuccess),
     tap(({ application }) => {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: application.id }));
       this.snackBarService.openNotification({ messageText: 'application.created' });
     })
-  );
+  ));
 
-  @Effect()
-  updateApplication$ = this.actions.pipe(
+  //@createEffect()
+  updateApplication$ = createEffect(() =>this.actions.pipe(
     ofType(updateApplication),
     switchMap(({ id, name }) =>
       this.applicationService.put(id, name).pipe(
@@ -89,18 +89,18 @@ export class ApplicationListEffect {
         catchError(error => of(updateApplicationFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  updateApplicationSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  updateApplicationSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(updateApplicationSuccess),
     tap(() => {
       this.snackBarService.openNotification({ messageText: 'application.edited' });
     })
-  )
+  ));
 
-  @Effect()
-  deleteApplication$ = this.actions.pipe(
+  //@createEffect()
+  deleteApplication$ = createEffect(() =>this.actions.pipe(
     ofType(deleteApplication),
     switchMap(app =>
       this.applicationService.delete(app.id).pipe(
@@ -111,21 +111,21 @@ export class ApplicationListEffect {
         catchError(error => of(deleteApplicationFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  deleteApplicationSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  deleteApplicationSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(deleteApplicationSuccess),
     tap(() => {
       this.snackBarService.openNotification({ messageText: 'application.deleted' });
     })
-  )
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
-  );
+  ));
 }

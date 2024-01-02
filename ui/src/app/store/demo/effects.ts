@@ -15,7 +15,7 @@
  */
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
@@ -26,8 +26,8 @@ import { loadDemoApiKey, loadDemoApiKeyFail, loadDemoApiKeySuccess, loadDemoStat
 export class DemoEffects {
   constructor(private actions: Actions, private demoService: DemoService) {}
 
-  @Effect()
-  loadDemoStatus$ = this.actions.pipe(
+  //@createEffect()
+  loadDemoStatus$ = createEffect(() =>this.actions.pipe(
     ofType(loadDemoStatus),
     switchMap(() =>
       this.demoService.getStatus().pipe(
@@ -39,10 +39,10 @@ export class DemoEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  loadDemoApiKey$ = this.actions.pipe(
+  //@createEffect()
+  loadDemoApiKey$ = createEffect(() =>this.actions.pipe(
     ofType(loadDemoApiKey),
     switchMap(() =>
       this.demoService.getModel().pipe(
@@ -56,5 +56,5 @@ export class DemoEffects {
         })
       )
     )
-  );
+  ));
 }

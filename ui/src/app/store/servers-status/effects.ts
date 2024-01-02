@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { delay, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 import { LoadingPhotoService } from 'src/app/core/photo-loader/photo-loader.service';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
@@ -49,8 +49,8 @@ export class ServerStatusEffect {
     private store: Store<AppState>,
   ) { }
 
-  @Effect()
-  $getServerStatus = this.actions.pipe(
+  //@createEffect()
+  $getServerStatus = createEffect(() =>this.actions.pipe(
     delay(1000),
     ofType(getBeServerStatus),
     switchMap(() =>
@@ -67,10 +67,10 @@ export class ServerStatusEffect {
         ))
       )
     )
-  );
+  ));
 
-  @Effect()
-  $getDbServerStatus = this.actions.pipe(
+  //@createEffect()
+  $getDbServerStatus = createEffect(() =>this.actions.pipe(
     delay(1000),
     ofType(getDbServerStatus),
     switchMap(() =>
@@ -87,10 +87,10 @@ export class ServerStatusEffect {
         ))
       )
     )
-  );
+  ));
 
-  @Effect()
-  $getCoreServerStatus = this.actions.pipe(
+  //@createEffect()
+  $getCoreServerStatus = createEffect(() =>this.actions.pipe(
     delay(1000),
     ofType(getCoreServerStatus),
     switchMap(() =>
@@ -107,5 +107,5 @@ export class ServerStatusEffect {
         ))
       )
     )
-  );
+  ));
 }

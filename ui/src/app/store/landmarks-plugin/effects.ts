@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -10,8 +10,8 @@ import { getPlugin, getPluginFail, getPluginSuccess } from './action';
 export class LandmarksPlaginEffects {
   constructor(private loaderService: LoadingPhotoService, private actions: Actions, private store: Store<any>) {}
 
-  @Effect({ dispatch: false })
-  getPlugin$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  getPlugin$ = createEffect(() =>this.actions.pipe(
     ofType(getPlugin),
     switchMap(() =>
       this.loaderService.getPlugin().pipe(
@@ -24,5 +24,5 @@ export class LandmarksPlaginEffects {
         catchError(error => of(getPluginFail(error)))
       )
     )
-  );
+  ));
 }

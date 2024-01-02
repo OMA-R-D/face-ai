@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
@@ -56,8 +56,8 @@ export class ModelEffects {
     private store: Store<any>
   ) {}
 
-  @Effect()
-  loadModel$ = this.actions.pipe(
+  //@createEffect()
+  loadModel$ = createEffect(() =>this.actions.pipe(
     ofType(loadModel),
     switchMap(action =>
       this.modelService.getModel(action.applicationId, action.selectedModelId).pipe(
@@ -67,10 +67,10 @@ export class ModelEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  loadModels$ = this.actions.pipe(
+  //@createEffect()
+  loadModels$ = createEffect(() =>this.actions.pipe(
     ofType(loadModels),
     switchMap(action =>
       this.modelService.getAll(action.applicationId).pipe(
@@ -78,12 +78,12 @@ export class ModelEffects {
         catchError(error => of(loadModelsFail({ error })))
       )
     )
-  );
+  ));
 
   isFirtsService: boolean;
 
-  @Effect()
-  createModel$ = this.actions.pipe(
+  //@createEffect()
+  createModel$ = createEffect(() =>this.actions.pipe(
     ofType(createModel),
     tap(({ model }) => (this.isFirtsService = model.isFirstService)),
     switchMap(action =>
@@ -92,10 +92,10 @@ export class ModelEffects {
         catchError(error => of(createModelFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  createModelSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  createModelSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(createModelSuccess),
     withLatestFrom(this.store.select(selectCurrentApp)),
     tap(([{ model }, app]) => {
@@ -117,10 +117,10 @@ export class ModelEffects {
             });
       }
     })
-  );
+  ));
 
-  @Effect()
-  updateModel$ = this.actions.pipe(
+  //@createEffect()
+  updateModel$ = createEffect(() =>this.actions.pipe(
     ofType(updateModel),
     switchMap(action =>
       this.modelService.update(action.applicationId, action.modelId, action.name).pipe(
@@ -128,10 +128,10 @@ export class ModelEffects {
         catchError(error => of(updateModelFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  cloneModel$ = this.actions.pipe(
+  //@createEffect()
+  cloneModel$ = createEffect(() =>this.actions.pipe(
     ofType(cloneModel),
     switchMap(action =>
       this.modelService.clone(action.applicationId, action.modelId, action.name).pipe(
@@ -139,10 +139,10 @@ export class ModelEffects {
         catchError(error => of(cloneModelFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  deleteModel$ = this.actions.pipe(
+  //@createEffect()
+  deleteModel$ = createEffect(() =>this.actions.pipe(
     ofType(deleteModel),
     switchMap(action =>
       forkJoin([of(action.modelId), this.modelService.delete(action.applicationId, action.modelId)]).pipe(
@@ -150,22 +150,22 @@ export class ModelEffects {
         catchError(error => of(deleteModelFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(loadModelsFail, createModelFail, cloneModelFail, updateModelFail, deleteModelFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
-  );
+  ));
 
   //Listen for the 'loadModelsFail'
-  @Effect({ dispatch: false })
-  loadFail$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  loadFail$ = createEffect(() =>this.actions.pipe(
     ofType(loadModelsFail),
     tap(() => {
       this.router.navigateByUrl(Routes.Home);
     })
-  );
+  ));
 }

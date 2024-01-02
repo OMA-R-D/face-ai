@@ -15,7 +15,7 @@
  */
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { DefaultRouterStateSerializer, RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { FullRouterStateSerializer, RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -59,7 +59,7 @@ import { ServerStatusEffect } from './servers-status/effects';
     LandmarksPluginModule,
     MailServiceModule,
     StoreRouterConnectingModule.forRoot({
-      serializer: DefaultRouterStateSerializer,
+      serializer: FullRouterStateSerializer,
       stateKey: 'router',
     }),
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 30 }) : [],

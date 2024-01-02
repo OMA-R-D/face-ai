@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { from, of, Subject } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -76,8 +76,8 @@ export class CollectionEffects {
     private store: Store<CollectionEntityState>
   ) {}
 
-  @Effect()
-  loadSubjects$ = this.actions.pipe(
+  //@createEffect()
+  loadSubjects$ = createEffect(() =>this.actions.pipe(
     ofType(loadSubjects),
     switchMap(({ apiKey }) =>
       this.collectionService.getSubjectsList(apiKey).pipe(
@@ -85,10 +85,10 @@ export class CollectionEffects {
         catchError(error => of(loadSubjectsFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  addSubject$ = this.actions.pipe(
+  //@createEffect()
+  addSubject$ = createEffect(() =>this.actions.pipe(
     ofType(addSubject),
     switchMap(({ name, apiKey }) =>
       this.collectionService.addSubject(name, apiKey).pipe(
@@ -96,10 +96,10 @@ export class CollectionEffects {
         catchError(error => of(addSubjectFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  editSubject$ = this.actions.pipe(
+  //@createEffect()
+  editSubject$ = createEffect(() =>this.actions.pipe(
     ofType(editSubject),
     switchMap(({ editName, apiKey, subject }) =>
       this.collectionService.editSubject(editName, apiKey, subject).pipe(
@@ -107,10 +107,10 @@ export class CollectionEffects {
         catchError(error => of(editSubjectFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  deleteSubject$ = this.actions.pipe(
+  //@createEffect()
+  deleteSubject$ = createEffect(() =>this.actions.pipe(
     ofType(deleteSubject),
     switchMap(({ name, apiKey }) =>
       this.collectionService.deleteSubject(name, apiKey).pipe(
@@ -118,25 +118,25 @@ export class CollectionEffects {
         catchError(error => of(deleteSubjectFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  initSelectedSubject$ = this.actions.pipe(
+  //@createEffect()
+  initSelectedSubject$ = createEffect(() =>this.actions.pipe(
     ofType(initSelectedSubject),
     withLatestFrom(this.store.select(selectCollectionSubject), this.store.select(selectCollectionSubjects)),
     switchMap(([, subject, subjects]) => (!subject ? [setSelectedSubject({ subject: subjects[0] })] : []))
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSelectedExamplesFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
-  );
+  ));
 
-  @Effect()
-  loadSubjectExamples$ = this.actions.pipe(
+  //@createEffect()
+  loadSubjectExamples$ = createEffect(() =>this.actions.pipe(
     ofType(getSubjectExamples),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ subject }, apiKey]) =>
@@ -145,10 +145,10 @@ export class CollectionEffects {
         catchError(error => of(getSubjectExamplesFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  loadNextPage$ = this.actions.pipe(
+  //@createEffect()
+  loadNextPage$ = createEffect(() =>this.actions.pipe(
     ofType(getSubjectMediaNextPage),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ subject, page, totalPages }, apiKey]) => {
@@ -160,10 +160,10 @@ export class CollectionEffects {
         );
       }
     })
-  );
+  ));
 
-  @Effect()
-  deleteSubjectExample$ = this.actions.pipe(
+  //@createEffect()
+  deleteSubjectExample$ = createEffect(() =>this.actions.pipe(
     ofType(deleteSubjectExample),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ item }, apiKey]) =>
@@ -173,10 +173,10 @@ export class CollectionEffects {
         catchError(error => of(deleteSubjectExampleFail({ item, error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  readImageFile$ = this.actions.pipe(
+  //@createEffect()
+  readImageFile$ = createEffect(() =>this.actions.pipe(
     ofType(readImageFiles),
     withLatestFrom(this.store.select(selectCollectionSubject)),
     switchMap(([action, subject]) => {
@@ -207,13 +207,13 @@ export class CollectionEffects {
         switchMap(payload => [addFileToCollection(payload), startUploadImageOrder()])
       );
     })
-  );
+  ));
 
   collectionItem: CollectionItem;
   currentSubject: string;
 
-  @Effect()
-  startUploadOrder$ = this.actions.pipe(
+  //@createEffect()
+  startUploadOrder$ = createEffect(() =>this.actions.pipe(
     ofType(startUploadImageOrder),
     withLatestFrom(this.store.select(selectCollectionSubject)),
     tap(([, subject]) => (this.currentSubject = subject)),
@@ -233,10 +233,10 @@ export class CollectionEffects {
       let subject = this.currentSubject;
       return getSubjectExamples({ subject });
     })
-  );
+  ));
 
-  @Effect()
-  uploadImage$ = this.actions.pipe(
+  //@createEffect()
+  uploadImage$ = createEffect(() =>this.actions.pipe(
     ofType(uploadImage),
     withLatestFrom(
       this.store.select(selectCurrentApiKey),
@@ -266,32 +266,32 @@ export class CollectionEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  uploadImageSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  uploadImageSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(uploadImageSuccess, uploadImageFail),
     tap(({ continueUpload }) => {
       if (continueUpload) {
         this.store.dispatch(startUploadImageOrder());
       }
     })
-  );
+  ));
 
-  @Effect()
-  setSubjectMode$ = this.actions.pipe(
+  //@createEffect()
+  setSubjectMode$ = createEffect(() =>this.actions.pipe(
     ofType(setSubjectMode),
     switchMap(({ mode }) => (mode === SubjectModeEnum.Default ? [resetSelectedExamples()] : []))
-  );
+  ));
 
-  @Effect()
-  setSelectedSubject$ = this.actions.pipe(
+  //@createEffect()
+  setSelectedSubject$ = createEffect(() =>this.actions.pipe(
     ofType(setSelectedSubject),
     switchMap(() => [setSubjectMode({ mode: SubjectModeEnum.Default })])
-  );
+  ));
 
-  @Effect()
-  deleteSelectedExamples$ = this.actions.pipe(
+  //@createEffect()
+  deleteSelectedExamples$ = createEffect(() =>this.actions.pipe(
     ofType(deleteSelectedExamples),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ ids }, apiKey]) =>
@@ -301,14 +301,14 @@ export class CollectionEffects {
         catchError(error => of(deleteSelectedExamplesFail({ error })))
       )
     )
-  );
+  ));
 
   //Listen for the 'loadModelsFail'
-  @Effect({ dispatch: false })
-  loadFail$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  loadFail$ = createEffect(() =>this.actions.pipe(
     ofType(loadSubjectsFail),
     tap(() => {
       this.router.navigateByUrl(Routes.Home);
     })
-  );
+  ));
 }

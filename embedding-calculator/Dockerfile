@@ -5,7 +5,7 @@ FROM debian:bullseye
 # Set the Debian mirror
 RUN sed -i 's/http:\/\/deb.debian.org\/debian\//http:\/\/mirror.example.com\/debian\//' /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
+RUN apt-get update && apt-get --fix-missing install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 python3-opencv \
         libaec-dev libblosc-dev libbrotli-dev libbz2-dev libgif-dev libopenjp2-7-dev \

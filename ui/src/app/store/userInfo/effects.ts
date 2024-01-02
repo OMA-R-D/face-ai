@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
@@ -28,8 +28,8 @@ import { getUserInfo, getUserInfoFail, getUserInfoSuccess, editUserInfo, editUse
 export class UserInfoEffect {
   constructor(private actions: Actions, private userInfoService: UserInfoService, private snackBarService: SnackBarService) {}
 
-  @Effect()
-  getUser$ = this.actions.pipe(
+  //@createEffect()
+  getUser$ = createEffect(() =>this.actions.pipe(
     ofType(getUserInfo),
     switchMap(() =>
       this.userInfoService.get().pipe(
@@ -37,10 +37,10 @@ export class UserInfoEffect {
         catchError(error => of(getUserInfoFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect()
-  editUserInfo$ = this.actions.pipe(
+  //@createEffect()
+  editUserInfo$ = createEffect(() =>this.actions.pipe(
     ofType(editUserInfo),
     switchMap(({ firstName, lastName }) =>
       this.userInfoService.editUserInfo(firstName, lastName).pipe(
@@ -48,17 +48,17 @@ export class UserInfoEffect {
         catchError(error => of(editUserInfoFail({ error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  editUserInfoSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  editUserInfoSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(editUserInfoSuccess),
     tap(() => this.snackBarService.openNotification({ messageText: 'org_users.edit_user_info' }))
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(getUserInfoFail, editUserInfoFail),
     tap(action => this.snackBarService.openHttpError(action.error))
-  );
+  ));
 }

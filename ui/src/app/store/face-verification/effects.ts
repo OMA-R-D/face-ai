@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 
 import { iif, Observable, of } from 'rxjs';
@@ -40,15 +40,15 @@ export class FaceRecognitionEffects {
     private translate: TranslateService
   ) {}
 
-  @Effect()
-  verifyFaceAddFile$ = this.actions.pipe(
+  //@createEffect()
+  verifyFaceAddFile$ = createEffect(() =>this.actions.pipe(
     ofType(verifyFaceAddProcessFile, verifyFaceAddCheckFileFile),
     withLatestFrom(this.store.select(selectFiles)),
     switchMap(([, files]) => (files.processFile && files.checkFile ? [verifyFace()] : []))
-  );
+  ));
 
-  @Effect()
-  verifyFaceSaveToStore$ = this.actions.pipe(
+  //@createEffect()
+  verifyFaceSaveToStore$ = createEffect(() =>this.actions.pipe(
     ofType(verifyFace),
     withLatestFrom(
       this.store.select(selectCurrentModel),
@@ -64,13 +64,13 @@ export class FaceRecognitionEffects {
         this.verificationFace(files.processFile, files.checkFile, demoApiKey, plugin.landmarks, maxFileBodySize.clientMaxBodySize)
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(verifyFaceFail),
     tap(action => this.snackBarService.openHttpError(action.error))
-  );
+  ));
 
   private verificationFace(processFile, checkFile, apiKey, landmarks, maxSize): Observable<Action> {
     if (maxSize < processFile.size + checkFile.size) {

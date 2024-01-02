@@ -15,7 +15,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
@@ -62,8 +62,8 @@ export class AuthEffects {
   ) {}
 
   // Listen for the 'LOGIN' action
-  @Effect()
-  logIn$ = this.actions.pipe(
+  //@createEffect()
+  logIn$ = createEffect(() =>this.actions.pipe(
     ofType(logIn),
     switchMap(action =>
       this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
@@ -71,18 +71,18 @@ export class AuthEffects {
         catchError(error => observableOf(logInFail(error)))
       )
     )
-  );
+  ));
 
   // Listen for the 'LOGIN' action
-  @Effect({ dispatch: false })
-  refreshToken$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  refreshToken$ = createEffect(() =>this.actions.pipe(
     ofType(refreshToken),
     switchMap(action => this.authService.refreshToken(action.grant_type).pipe(catchError(error => observableOf(logInFail(error)))))
-  );
+  ));
 
   // Listen for the 'LogInSuccess' action
-  @Effect({ dispatch: false })
-  logInSuccess$: Observable<any> = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  logInSuccess$: Observable<any> = createEffect() =>this.actions.pipe(
     ofType(logInSuccess),
     withLatestFrom(this.store.select(selectQueryParams), this.store.select(selectDemoPageAvailability)),
     map(([, queryParams, isDemoPageAvailable]) => {
@@ -94,8 +94,8 @@ export class AuthEffects {
     )
   );
 
-  @Effect({ dispatch: false })
-  showError$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showError$ = createEffect(() =>this.actions.pipe(
     ofType(logInFail, signUpFail),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
@@ -108,19 +108,19 @@ export class AuthEffects {
         this.snackBarService.openHttpError(action.error);
       }
     })
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  showSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  showSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(signUpSuccess),
     tap(action => {
       const message = action.confirmationNeeded ? 'auth.new_account_confirm_email' : 'auth.new_account_login';
       this.snackBarService.openNotification({ messageText: message });
     })
-  );
+  ));
 
-  @Effect()
-  signUp$: Observable<any> = this.actions.pipe(
+  //@createEffect()
+  signUp$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(signUp),
     switchMap(payload =>
       this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
@@ -128,46 +128,46 @@ export class AuthEffects {
         catchError(error => observableOf(signUpFail(error)))
       )
     )
-  );
+  ));
 
-  @Effect()
-  signUpSuccess$: Observable<any> = this.actions.pipe(
+  //@createEffect()
+  signUpSuccess$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(signUpSuccess),
     withLatestFrom(this.store.select(selectMailStatus)),
     map(([action, mailStatus]) =>
       mailStatus.mailServiceEnabled ? confirmEmailMessage() : logIn({ email: action.email, password: action.password })
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  confirmEmailMessage$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  confirmEmailMessage$ = createEffect(() =>this.actions.pipe(
     ofType(confirmEmailMessage),
     tap(
       () => this.router.navigateByUrl(Routes.UpdatePassword) // need new page saying that email was sent tp conirm)
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFail));
+  //@createEffect({ dispatch: false })
+  signUpFailure$: Observable<any> = createEffect(() =>this.actions.pipe(ofType(signUpFail)));
 
-  @Effect()
-  logOut$: Observable<any> = this.actions.pipe(
+  //@createEffect()
+  logOut$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(logOut),
     switchMap(() => {
       this.router.navigateByUrl(Routes.Login);
 
       return [clearUserToken(), resetUserInfo()];
     })
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  clearUserToken$: Observable<any> = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  clearUserToken$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(clearUserToken),
     switchMap(() => this.authService.clearUserToken())
-  );
+  ));
 
-  @Effect()
-  changePassword$: Observable<any> = this.actions.pipe(
+  //@createEffect()
+  changePassword$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(changePassword),
     switchMap(payload =>
       this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
@@ -175,19 +175,19 @@ export class AuthEffects {
         catchError(error => observableOf(changePasswordFail({ error: error })))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  changePasswordSuccess$: Observable<any> = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  changePasswordSuccess$: Observable<any> = createEffect(() =>this.actions.pipe(
     ofType(changePasswordSuccess),
     tap(() => this.snackBarService.openNotification({ messageText: 'auth.change_password_success' }))
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  changePasswordFailure$: Observable<any> = this.actions.pipe(ofType(changePasswordFail));
+  //@createEffect({ dispatch: false })
+  changePasswordFailure$: Observable<any> = createEffect(() =>this.actions.pipe(ofType(changePasswordFail)));
 
-  @Effect({ dispatch: false })
-  recoveryPassword$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  recoveryPassword$ = createEffect(() =>this.actions.pipe(
     ofType(recoveryPassword),
     switchMap(action =>
       this.authService.recoveryPassword(action.email).pipe(
@@ -195,25 +195,25 @@ export class AuthEffects {
         catchError(error => observableOf(recoveryPasswordFail(error)))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  recoveryPasswordSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  recoveryPasswordSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(recoveryPasswordSuccess),
     tap(() => {
       const message = 'recovery.email_check';
       this.snackBarService.openNotification({ messageText: message });
     })
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  recoveryPasswordFail$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  recoveryPasswordFail$ = createEffect(() =>this.actions.pipe(
     ofType(recoveryPasswordFail),
     tap(error => this.snackBarService.openHttpError(error as any))
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  resetPassword$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  resetPassword$ = createEffect(() =>this.actions.pipe(
     ofType(resetPassword),
     switchMap(action =>
       this.authService.updatePassword(action.password, action.token).pipe(
@@ -221,21 +221,21 @@ export class AuthEffects {
         catchError(error => observableOf(resetPasswordFail(error)))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  resetPasswordSuccess$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  resetPasswordSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(resetPasswordSuccess),
     tap(() => {
       this.router.navigateByUrl(Routes.Login);
       const message = 'auth.change_password_success';
       this.snackBarService.openNotification({ messageText: message });
     })
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  resetPasswordFail$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  resetPasswordFail$ = createEffect(() =>this.actions.pipe(
     ofType(resetPasswordFail),
     tap(error => this.snackBarService.openHttpError(error as any))
-  );
+  ));
 }

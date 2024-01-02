@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { switchMap, filter, tap, catchError, withLatestFrom } from 'rxjs/operators';
@@ -28,8 +28,8 @@ import { loadModelStatistics, loadModelStatisticsFail, loadModelStatisticsSucces
 export class ModelStatisticsEffect {
   constructor(private actions: Actions, private modelService: ModelService, private store: Store<any>) {}
 
-  @Effect({ dispatch: false })
-  loadModelStatistics$ = this.actions.pipe(
+  //@createEffect({ dispatch: false })
+  loadModelStatistics$ = createEffect(() =>this.actions.pipe(
     ofType(loadModelStatistics),
     switchMap(data =>
       this.modelService.getStatistics(data.appId, data.modelId).pipe(
@@ -38,5 +38,5 @@ export class ModelStatisticsEffect {
         catchError(error => of(loadModelStatisticsFail(error)))
       )
     )
-  );
+  ));
 }
