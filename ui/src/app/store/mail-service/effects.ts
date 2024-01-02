@@ -28,12 +28,12 @@ export class MailServiceEffects {
   constructor(private mailService: MailService, private actions: Actions, private store: Store<any>) {}
 
   //@createEffect({ dispatch: false })
-  getMailServiceStatus$ = createEffect(() =>this.actions.pipe(
+  getMailServiceStatus$ = createEffect(() => this.actions.pipe(
     ofType(getMailServiceStatus),
     switchMap(() =>
       this.mailService.getStatus().pipe(
-        map((status: MailServiceStatus) => this.store.dispatch(getMailServiceStatusSuccess(status))),
-        catchError(error => of(getMailServiceStatusFail(error)))
+        map((status: MailServiceStatus) => getMailServiceStatusSuccess({ status })),
+        catchError(error => of(getMailServiceStatusFail({ error })))
       )
     )
   ));

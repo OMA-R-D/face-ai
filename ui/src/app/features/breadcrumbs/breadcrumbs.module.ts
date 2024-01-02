@@ -28,7 +28,10 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 @NgModule({
-  declarations: [BreadcrumbsComponent],
+  declarations: [
+    BreadcrumbsComponent,
+    InviteDialogComponent
+  ],
   exports: [BreadcrumbsComponent],
   imports: [
     CommonModule,
@@ -41,6 +44,6 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
     InviteDialogModule,
   ],
   providers: [BreadcrumbsFacade],
-  entryComponents: [InviteDialogComponent],
+  // entryComponents: [InviteDialogComponent],
 })
 export class BreadcrumbsModule {}

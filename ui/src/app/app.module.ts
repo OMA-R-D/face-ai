@@ -70,6 +70,12 @@ import { NoCacheTranslateLoader } from './no-cache-translate-loader';
     RoleEditDialogComponent,
     MergerDialogComponent,
     ServerStatusComponent,
+    CreateDialogComponent,
+    AlertComponent,
+    EditDialogComponent,
+    EditSubjectDialog,
+    DeleteDialogComponent,
+    RoleEditDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -117,13 +123,13 @@ import { NoCacheTranslateLoader } from './no-cache-translate-loader';
   ],
   bootstrap: [AppComponent],
   exports: [CreateDialogComponent],
-  entryComponents: [
-    CreateDialogComponent,
-    AlertComponent,
-    EditDialogComponent,
-    EditSubjectDialog,
-    DeleteDialogComponent,
-    RoleEditDialogComponent,
-  ],
+  // entryComponents: [
+  //   CreateDialogComponent,
+  //   AlertComponent,
+  //   EditDialogComponent,
+  //   EditSubjectDialog,
+  //   DeleteDialogComponent,
+  //   RoleEditDialogComponent,
+  // ],
 })
 export class AppModule {}

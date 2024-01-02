@@ -20,8 +20,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppSnackBarComponent } from './snackbar.component';
 
 @NgModule({
-  declarations: [AppSnackBarComponent],
+  declarations: [AppSnackBarComponent,AppSnackBarComponent],
   imports: [MatSnackBarModule, CommonModule],
-  entryComponents: [AppSnackBarComponent],
+  //entryComponents: [AppSnackBarComponent],
 })
 export class SnackBarModule {}

@@ -16,7 +16,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { Observable, of as observableOf, of, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
@@ -82,17 +82,19 @@ export class AuthEffects {
 
   // Listen for the 'LogInSuccess' action
   //@createEffect({ dispatch: false })
-  logInSuccess$: Observable<any> = createEffect() =>this.actions.pipe(
+  logInSuccess$ = createEffect(() => this.actions.pipe(
     ofType(logInSuccess),
-    withLatestFrom(this.store.select(selectQueryParams), this.store.select(selectDemoPageAvailability)),
-    map(([, queryParams, isDemoPageAvailable]) => {
+    withLatestFrom(
+      this.store.select(selectQueryParams),
+      this.store.select(selectDemoPageAvailability)
+    ),
+    switchMap(([, queryParams, isDemoPageAvailable]) => {
       const { redirect } = queryParams;
-      return [redirect, isDemoPageAvailable];
+      const navigateTo = isDemoPageAvailable ? Routes.CreateApplication : redirect || Routes.Home;
+      return of(navigateTo);
     }),
-    tap(([redirect, isDemoPageAvailable]) =>
-      isDemoPageAvailable ? this.router.navigateByUrl(Routes.CreateApplication) : this.router.navigateByUrl(redirect || Routes.Home)
-    )
-  );
+    tap(navigateTo => this.router.navigateByUrl(navigateTo))
+  ));
 
   //@createEffect({ dispatch: false })
   showError$ = createEffect(() =>this.actions.pipe(
@@ -187,16 +189,15 @@ export class AuthEffects {
   changePasswordFailure$: Observable<any> = createEffect(() =>this.actions.pipe(ofType(changePasswordFail)));
 
   //@createEffect({ dispatch: false })
-  recoveryPassword$ = createEffect(() =>this.actions.pipe(
+  recoveryPassword$ = createEffect(() => this.actions.pipe(
     ofType(recoveryPassword),
     switchMap(action =>
       this.authService.recoveryPassword(action.email).pipe(
-        map(() => this.store.dispatch(recoveryPasswordSuccess())),
-        catchError(error => observableOf(recoveryPasswordFail(error)))
+        map(() => recoveryPasswordSuccess()), // Dispatch success action
+        catchError(error => of(recoveryPasswordFail({ error }))) // Dispatch failure action with error
       )
     )
   ));
-
   //@createEffect({ dispatch: false })
   recoveryPasswordSuccess$ = createEffect(() =>this.actions.pipe(
     ofType(recoveryPasswordSuccess),
@@ -213,12 +214,12 @@ export class AuthEffects {
   ));
 
   //@createEffect({ dispatch: false })
-  resetPassword$ = createEffect(() =>this.actions.pipe(
+  resetPassword$ = createEffect(() => this.actions.pipe(
     ofType(resetPassword),
     switchMap(action =>
       this.authService.updatePassword(action.password, action.token).pipe(
-        map(() => this.store.dispatch(resetPasswordSuccess())),
-        catchError(error => observableOf(resetPasswordFail(error)))
+        map(() => resetPasswordSuccess()), // Dispatch success action
+        catchError(error => of(resetPasswordFail({ error }))) // Dispatch failure action with error
       )
     )
   ));

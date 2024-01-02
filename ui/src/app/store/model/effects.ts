@@ -45,6 +45,9 @@ import {
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Store } from '@ngrx/store';
 import { selectCurrentApp } from '../application/selectors';
+import { TypedAction } from '@ngrx/store/src/models';
+import { Model } from 'src/app/data/interfaces/model';
+import { Application } from 'src/app/data/interfaces/application';
 
 @Injectable()
 export class ModelEffects {
@@ -95,28 +98,24 @@ export class ModelEffects {
   ));
 
   //@createEffect({ dispatch: false })
-  createModelSuccess$ = createEffect(() =>this.actions.pipe(
+  createModelSuccess$ = createEffect(() => this.actions.pipe(
     ofType(createModelSuccess),
     withLatestFrom(this.store.select(selectCurrentApp)),
-    tap(([{ model }, app]) => {
+    tap(([action, app]: [{ model: Model } & TypedAction<"[Model] Create Model Success">, Application]) => {
       if (this.isFirtsService) {
-        model.type === ServiceTypes.Recognition
-          ? this.router.navigate([Routes.ManageCollection], {
-              queryParams: {
-                app: app.id,
-                model: model.id,
-                type: model.type,
-              },
-            })
-          : this.router.navigate([Routes.TestModel], {
-              queryParams: {
-                app: app.id,
-                model: model.id,
-                type: model.type,
-              },
-            });
+        const { model } = action;
+        const queryParams = {
+          app: app.id,
+          model: model.id,
+          type: model.type,
+        };
+
+        const route = model.type === ServiceTypes.Recognition ? Routes.ManageCollection : Routes.TestModel;
+
+        this.router.navigate([route], { queryParams });
       }
-    })
+    }),
+    map(() => ({ type: 'EffectCompleted' })) // Map to a dummy action to satisfy the type
   ));
 
   //@createEffect()

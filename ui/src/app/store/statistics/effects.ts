@@ -29,13 +29,13 @@ export class ModelStatisticsEffect {
   constructor(private actions: Actions, private modelService: ModelService, private store: Store<any>) {}
 
   //@createEffect({ dispatch: false })
-  loadModelStatistics$ = createEffect(() =>this.actions.pipe(
+  loadModelStatistics$ = createEffect(() => this.actions.pipe(
     ofType(loadModelStatistics),
     switchMap(data =>
       this.modelService.getStatistics(data.appId, data.modelId).pipe(
-        // filter(data => !!data),
-        tap((data: Statistics) => this.store.dispatch(loadModelStatisticsSuccess(data))),
-        catchError(error => of(loadModelStatisticsFail(error)))
+        filter(statistics => !!statistics),
+        map((statistics: Statistics) => loadModelStatisticsSuccess({ statistics })),
+        catchError(error => of(loadModelStatisticsFail({ error })))
       )
     )
   ));

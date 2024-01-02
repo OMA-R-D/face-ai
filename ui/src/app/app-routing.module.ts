@@ -21,6 +21,7 @@ import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { CreateApplicationGuard } from './pages/create-application-wizard/create-application.guard';
 import { PasswordRecoveryComponent } from './pages/password-recovery/password-recovery.component';
+import { ExtraOptions } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -87,8 +88,12 @@ const routes: Routes = [
   { path: '**', redirectTo: '/' },
 ];
 
+const routerOptions: ExtraOptions = {
+  //relativeLinkResolution: 'legacy', // or 'corrected', or 'preserve'
+  // other options...
+};
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

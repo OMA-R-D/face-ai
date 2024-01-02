@@ -31,7 +31,12 @@ import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-
 import { EditUserInfoDialogModule } from '../edit-user-info-dialog/edit-user-info-dialog.module';
 
 @NgModule({
-  declarations: [ToolBarContainerComponent, ToolBarComponent],
+  declarations: [
+    ToolBarContainerComponent, 
+    ToolBarComponent, 
+    ChangePasswordDialogComponent, 
+    EditUserInfoDialogComponent
+  ],
   exports: [ToolBarContainerComponent, ToolBarComponent],
   imports: [
     CommonModule,
@@ -45,6 +50,6 @@ import { EditUserInfoDialogModule } from '../edit-user-info-dialog/edit-user-inf
     EditUserInfoDialogModule,
   ],
   providers: [ToolBarFacade],
-  entryComponents: [ChangePasswordDialogComponent, EditUserInfoDialogComponent],
+  //entryComponents: [ChangePasswordDialogComponent, EditUserInfoDialogComponent],
 })
 export class ToolBarModule {}
