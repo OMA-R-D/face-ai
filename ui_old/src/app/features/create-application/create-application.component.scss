@@ -31,7 +31,7 @@ $left-position: 120px;
 
 .application__container,
 .service__container {
-  height: calc(100vh - #{$footer-header-height}) !important;
+  height: calc(150vh - #{$footer-header-height}) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,7 +44,7 @@ $left-position: 120px;
   width: 100vw;
 
   &--create {
-    height: calc(100vh - #{$footer-header-height}) !important;
+    height: calc(150vh - #{$footer-header-height}) !important;
     width: calc((100vw - #{$left-position}) / 2);
     left: $left-position;
     bottom: 50px;
@@ -54,7 +54,7 @@ $left-position: 120px;
   }
 
   &--info {
-    height: calc(100vh - #{$footer-header-height}) !important;
+    height: calc(150vh - #{$footer-header-height}) !important;
     width: calc((100vw - #{$left-position}) / 2);
     position: absolute;
     right: 0;

@@ -14,3 +14,6 @@ build/
 
 ### VS Code ###
 .vscode/
+ui/.angular/
+
+ui/node_modules/
