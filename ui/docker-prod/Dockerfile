@@ -1,4 +1,4 @@
-FROM node:18.6 AS build
+FROM node:18.16 AS build
 WORKDIR /usr/src/app
 LABEL intermidiate_frs=true
 COPY . .

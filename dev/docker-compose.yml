@@ -78,7 +78,7 @@ services:
     image: ${registry}face-ai-fe:${FE_VERSION}
     restart: always
     build:
-      context: ../ui
+      context: ../ui_old
       dockerfile: docker-prod/Dockerfile
     container_name: "face-ai-ui"
     ports:
@@ -96,7 +96,7 @@ services:
     restart: always
     container_name: "face-ai-core"
     ports:
-      - "3300:3000"
+      - "3000:3000"
     build:
       context: ../embedding-calculator
     environment:
